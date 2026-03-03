@@ -1,0 +1,40 @@
+## Build outputs
+bin/
+obj/
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Logs
+logs/
+*.log
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+## Publish outputs
+**/publish/
+**/artifacts/
+
+## ASP.NET Core
+wwwroot/**/*.map
+appsettings.Development.json
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
+## Tooling
+.vscode/
+.ionide/
+
