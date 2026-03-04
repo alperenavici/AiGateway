@@ -1,10 +1,13 @@
 using AiGateway.Core.AiStrategy;
 using AiGateway.Core.Interfaces;
+using AiGateway.Data.Context;
 using AiGateway.Service;
 using AiGateway.Service.Behaviors;
 using AiGateway.WebApi.Exceptions;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,12 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
