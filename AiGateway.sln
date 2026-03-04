@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiGateway.WebApi", "AiGatew
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiGateway.Service", "AiGateway.Service\AiGateway.Service.csproj", "{AD7D3E2A-71E5-41BD-B124-8BAD31D783E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiGateway.Tests", "AiGateway.Tests\AiGateway.Tests.csproj", "{1866D27D-1369-4962-83BD-2321C6D807FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{AD7D3E2A-71E5-41BD-B124-8BAD31D783E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD7D3E2A-71E5-41BD-B124-8BAD31D783E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD7D3E2A-71E5-41BD-B124-8BAD31D783E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1866D27D-1369-4962-83BD-2321C6D807FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1866D27D-1369-4962-83BD-2321C6D807FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1866D27D-1369-4962-83BD-2321C6D807FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1866D27D-1369-4962-83BD-2321C6D807FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
