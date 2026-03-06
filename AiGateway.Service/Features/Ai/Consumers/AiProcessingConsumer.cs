@@ -45,18 +45,30 @@ public class AiProcessingConsumer:IConsumer<AiProcessingMessage>
         try
         {
             _logger.LogInformation("Yapay zekaya soru soruluyor...");
-            var response = await strategy.GenerateResponseAsync(message.Prompt, context.CancellationToken);
-
-            log.Response = response;
+            var fullResponseBuilder = new System.Text.StringBuilder();
+            await foreach (var chunk in strategy.StreamResponseAsync(message.Prompt, context.CancellationToken))
+            {
+                fullResponseBuilder.Append(chunk); 
+                await _hubContext.Clients.Group(message.LogId.ToString())
+                    .SendAsync("ReceiveAiResponseChunk", message.LogId, chunk, context.CancellationToken);
+            }
+            log.Response = fullResponseBuilder.ToString();
             log.Status = AiRequestStatus.Completed; 
-
-            _logger.LogInformation("Yapay zekadan cevap geldi, veritabanı güncelleniyor.");
+            _logger.LogInformation("Streaming bitti, veritabanı güncelleniyor.");
+            await _hubContext.Clients.Group(message.LogId.ToString())
+                .SendAsync("ReceiveAiResponseCompleted", message.LogId, context.CancellationToken);
         }
         catch (Exception ex)
         {
             log.Status = AiRequestStatus.Failed;
             log.Response = $"Hata oluştu: {ex.Message}";
             _logger.LogError(ex, "Yapay zeka çağrısında hata!");
+        
+            await _hubContext.Clients.Group(message.LogId.ToString())
+                .SendAsync("ReceiveAiResponseChunk", message.LogId, "\n[SİSTEM HATASI: Yapay zekaya ulaşılamadı.]", context.CancellationToken);
+            
+            await _hubContext.Clients.Group(message.LogId.ToString())
+                .SendAsync("ReceiveAiResponseCompleted", message.LogId, context.CancellationToken);
         
         }
 
@@ -65,7 +77,6 @@ public class AiProcessingConsumer:IConsumer<AiProcessingMessage>
         _logger.LogInformation("İşlem başarıyla tamamlandı ve veritabanına işlendi! LogId: {LogId}", message.LogId);
         _logger.LogInformation("SignalR üzerinden müşteriye anons geçiliyor...");
         
-        await _hubContext.Clients.Group(message.LogId.ToString()).SendAsync("ReceiveAiResponse", message.LogId, log.Response);
 
 
     }

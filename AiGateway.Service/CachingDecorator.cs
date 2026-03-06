@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using AiGateway.Core.Interfaces;
 
 namespace AiGateway.Service;
@@ -23,5 +24,16 @@ public class CachingDecorator:ILanguageModelStrategy
         var response = await _innerStrategy.GenerateResponseAsync(prompt, cancellationToken);
         _cache[response] = response;
         return response;
+    }
+
+    public async IAsyncEnumerable<string> StreamResponseAsync(string prompt, [EnumeratorCancellation] CancellationToken cancellationToken = default)    {
+        await Task.Delay(1000,cancellationToken);
+        string[] words = { "Merhaba", "Alperen,", "bu", "kelimeler", "sana", "arka", "plandaki", "bir", "işçiden", "kelime", "kelime", "akarak", "geliyor!" };
+
+        foreach (var word in words)
+        {
+            await Task.Delay(250,cancellationToken);
+            yield return word + " ";
+        }
     }
 }
