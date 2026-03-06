@@ -1,6 +1,7 @@
+using AiGateway.Core.Dto;
+using MediatR;
+
 namespace AiGateway.Service;
 
-public class GetModelByNameQuery
-{
-    
-}
+
+public record GetModelByNameQuery(string  ModelType):IRequest<IEnumerable<AiRequestLogDto>>;

@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AiGateway.Service;
 
-public class AiModelsHandler:IRequestHandler<GetModelByNameQuery,IEnumerable<AiRequestLogDto>>
+public class GetModelByNameQueryHandler:IRequestHandler<GetModelByNameQuery,IEnumerable<AiRequestLogDto>>
 {
     private readonly ApplicationDbContext _context;
     private readonly IServiceProvider _serviceProvider;
 
-    public AiModelsHandler(ApplicationDbContext context, IServiceProvider serviceProvider)
+    public GetModelByNameQueryHandler(ApplicationDbContext context, IServiceProvider serviceProvider)
     {
         _context = context;
         _serviceProvider = serviceProvider;
