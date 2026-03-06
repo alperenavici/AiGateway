@@ -29,5 +29,12 @@ public class AiController:ControllerBase
         var response=await _mediator.Send(query, cancellationToken);
         return Ok(response);
     }
+
+    [HttpGet("ai/{requestId:guid}")]
+    public async Task<IActionResult> Handle([FromRoute] GetAiResponseQuery query, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(query, cancellationToken);
+        return Ok(response);
+    }
     
 }
