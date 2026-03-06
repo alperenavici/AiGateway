@@ -34,9 +34,10 @@ public class AskAiCommandHandler:IRequestHandler<AskAiCommand,string>
             CreatedAt = DateTime.UtcNow
         };
         
-        await _context.AiRequestLogs.AddAsync(log, cancellationToken);
+        _context.AiRequestLogs.Add(log);
         await _context.SaveChangesAsync(cancellationToken);
         return response;
 
     }
+    
 }
