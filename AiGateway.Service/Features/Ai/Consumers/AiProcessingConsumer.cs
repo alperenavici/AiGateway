@@ -68,7 +68,7 @@ public class AiProcessingConsumer:IConsumer<AiProcessingMessage>
                 .SendAsync("ReceiveAiResponseChunk", message.LogId, "\n[SİSTEM HATASI: Yapay zekaya ulaşılamadı.]", context.CancellationToken);
             
             await _hubContext.Clients.Group(message.LogId.ToString())
-                .SendAsync("ReceiveAiResponseCompleted", message.LogId, context.CancellationToken);
+                .SendAsync("ReceiveAiResponseCompleted", context.CancellationToken);
         
         }
 

@@ -1,30 +1,44 @@
+using System.ClientModel;
 using System.Runtime.CompilerServices;
 using AiGateway.Core.Interfaces;
+using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Chat;
 
 namespace AiGateway.Core.AiStrategy;
 
 public class OpenAiStrategy : ILanguageModelStrategy
 {
+    private readonly string _apiKey;
+    private readonly string _model;
+
+    public OpenAiStrategy(IConfiguration configuration)
+    {
+        _apiKey=configuration["ApiSettings:GroqApiKey"];
+        _model=configuration["ApiSettings:GroqModel"];
+    }
+
+    private ChatClient GetClient()
+    {
+        var options = new OpenAIClientOptions { Endpoint = new Uri("https://api.groq.com/openai/v1/") };
+        return new ChatClient(_model, new ApiKeyCredential(_apiKey), options);
+    }
+
     public async Task<string> GenerateResponseAsync(string prompt, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(prompt))
-        {
-            return "Prompt is required.";
-        }
-        
         await Task.Delay(1000, cancellationToken);
-        return $"[OpemAI Response:{prompt}]";
+        return $"OpenAi";
     }
-    public async IAsyncEnumerable<string> StreamResponseAsync(string prompt, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-    {
-        await Task.Delay(800, cancellationToken); 
-
-        string[] words = { "Merhaba,", "OpenAI", "bağlantısı", "henüz", "kurulmadı", "ama", "sistemin", "harika", "bir", "şekilde", "kelime", "kelime", "akıyor!" };
-
-        foreach (var word in words)
+    public async IAsyncEnumerable<string> StreamResponseAsync(string prompt, [EnumeratorCancellation] CancellationToken cancellationToken = default)    {
+        var client = GetClient();
+        var messages=new List<ChatMessage>(){new UserChatMessage(prompt)};
+        var streamingResult=client.CompleteChatStreamingAsync(messages, cancellationToken:cancellationToken);
+        await foreach (StreamingChatCompletionUpdate update in streamingResult)
         {
-            await Task.Delay(200, cancellationToken);
-            yield return word + " "; 
+            if (update.ContentUpdate.Count > 0)
+            {
+                yield return update.ContentUpdate[0].Text;
+            }
         }
     }
   
