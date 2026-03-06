@@ -65,7 +65,7 @@ public class AiProcessingConsumer:IConsumer<AiProcessingMessage>
         _logger.LogInformation("İşlem başarıyla tamamlandı ve veritabanına işlendi! LogId: {LogId}", message.LogId);
         _logger.LogInformation("SignalR üzerinden müşteriye anons geçiliyor...");
         
-        await _hubContext.Clients.All.SendAsync("ReceiveAiResponse", message.LogId, log.Response);
+        await _hubContext.Clients.Group(message.LogId.ToString()).SendAsync("ReceiveAiResponse", message.LogId, log.Response);
 
 
     }
