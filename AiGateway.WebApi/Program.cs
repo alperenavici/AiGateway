@@ -2,8 +2,7 @@ using AiGateway.Core.AiStrategy;
 using AiGateway.Core.Interfaces;
 using AiGateway.Data.Context;
 using AiGateway.Service;
-using AiGateway.Service.Behaviors;
-using AiGateway.Service.Consumers;
+using AiGateway.Service.Features.Ai.Consumers;
 using AiGateway.Service.Hubs;
 using AiGateway.WebApi.Exceptions;
 using FluentValidation;
@@ -19,15 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddKeyedScoped<ILanguageModelStrategy,OpenAiStrategy>("Openai");
 builder.Services.AddKeyedScoped<ILanguageModelStrategy,LocalLlmStrategy>("LocalLlm");
 builder.Services.AddValidatorsFromAssembly(typeof(AskAiCommandValidator).Assembly);
-builder.Services.AddMediatR(cfg => 
-{
-    cfg.RegisterServicesFromAssembly(typeof(AskAiCommandHandler).Assembly);
-    
-    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>)); 
-});
+// builder.Services.AddMediatR(cfg => 
+// {
+//     cfg.RegisterServicesFromAssembly(typeof(AskAiCommandHandler).Assembly);
+//     
+//     cfg.AddOpenBehavior(typeof(ValidationBehavior<,>)); 
+// });
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<AiProcessingConsumer>();
+    x.AddConsumer<AnalyzeTestConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);

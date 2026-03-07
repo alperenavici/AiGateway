@@ -23,12 +23,12 @@ public class AiController:ControllerBase
         
     }
 
-    [HttpGet("model")]
-    public async Task<IActionResult> Handle([FromQuery] GetModelByNameQuery query, CancellationToken cancellationToken)
-    {
-        var response=await _mediator.Send(query, cancellationToken);
-        return Ok(response);
-    }
+    // [HttpGet("model")]
+    // public async Task<IActionResult> Handle([FromQuery] GetModelByNameQuery query, CancellationToken cancellationToken)
+    // {
+    //     var response=await _mediator.Send(query, cancellationToken);
+    //     return Ok(response);
+    // }
 
     [HttpGet("ai/{requestId:guid}")]
     public async Task<IActionResult> Handle([FromRoute] GetAiResponseQuery query, CancellationToken cancellationToken)
